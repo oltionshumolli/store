@@ -1,0 +1,347 @@
+.hidden {
+    display: none;
+}
+
+h1 {
+    font-family: 'Pacifico', cursive; /* Titulli kryesor */
+}
+
+p {
+    font-family: 'Playfair Display', serif; /* Teksti i paragrafeve */
+    text-align: center;
+    text-decoration: solid;
+}
+
+body {
+    font-family: 'Raleway', sans-serif; /* Fonti kryesor */
+    line-height: 1.6;
+    background: url('1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background-color: rgba(51, 51, 51, 0.281);
+    padding: 15px 30px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Hije */
+    font-family: 'Raleway', sans-serif;
+    position: sticky; /* Mbetet në krye */
+    top: 0;
+    z-index: 1000;
+}
+
+.navbar ul {
+    list-style: none;
+    display: flex;
+    margin: 0;
+    padding: 0;
+    gap: 25px;
+}
+
+.navbar ul li {
+    position: relative;
+}
+
+.navbar ul li a {
+    text-decoration: none;
+    color: white;
+    font-size: 18px;
+    padding: 8px 15px;
+    transition: color 0.3s ease, background-color 0.3s ease;
+}
+
+.navbar ul li a:hover {
+    color: #007bff; /* Ngjyra kur e prek */
+    background-color: rgba(255, 255, 255, 0.2); /* Sfondi kur e prek */
+    border-radius: 5px;
+}
+
+/* Animacioni nën secilën menu */
+.navbar ul li a::after {
+    content: '';
+    display: block;
+    width: 0;
+    height: 2px;
+    background: #007bff; /* Ngjyra e vijës poshtë */
+    transition: width 0.3s ease;
+    margin: auto;
+}
+
+.navbar ul li a:hover::after {
+    width: 100%; /* Zgjat vija kur prek */
+}
+
+/* Për menunë e hapur në ekran të vogël */
+.navbar-toggle {
+    display: none;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    color: white;
+}
+
+.navbar-toggle span {
+    width: 25px;
+    height: 3px;
+    background: white;
+    margin: 4px 0;
+    transition: all 0.3s ease;
+}
+
+/* Për ekranet e vogla */
+@media screen and (max-width: 768px) {
+    .navbar ul {
+        display: none;
+        flex-direction: column;
+        gap: 15px;
+        background-color: rgba(51, 51, 51, 0.9);
+        position: absolute;
+        top: 100%;
+        right: 0;
+        width: 200px;
+        padding: 10px;
+        border-radius: 8px;
+        box-shadow: 0 5px 10px rgba(0, 0, 0, 0.3);
+    }
+
+    .navbar ul.active {
+        display: flex; /* Shfaqet kur klikojmë */
+    }
+
+    .navbar-toggle {
+        display: flex;
+    }
+}
+
+.welcome-section {
+    text-align: center;
+    padding: 50px 20px;
+    background: url('1.jpg') no-repeat center center fixed;
+    background-size: cover;
+    color: white;
+    font-family: monospace;
+  text-decoration: underline;
+  font-size: xxx-large;
+}
+
+.about-section {
+    text-align: left;
+    padding: 50px 20px;
+    background-color: #00000083;
+    background-size: cover;
+    color: white;
+}
+.ad-banner {
+    display: block;
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.ads {
+    display: flex;
+    overflow: hidden;
+    width: 100%;
+    position: relative;
+}
+
+.ad-image {
+    padding: 20px;
+    border-radius: 8px;
+    margin-top: 20px;
+    width: 100%;
+    height: 200px;
+    display: block;
+    transition: transform 1s ease;
+}
+
+button {
+    padding: 10px;
+    background-color: #007BFF;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-top: 10px;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+  .news-section {
+    background-color: #f5f5f5;
+    padding: 40px;
+    margin-top: 30px;
+    border-radius: 8px;
+    text-align: center;
+}
+
+.news-section h2 {
+    font-size: 24px;
+    color: #333;
+}
+
+.news-section p {
+    color: #666;
+    font-size: 16px;
+}
+
+/* Carousel Styles */
+.carousel {
+    position: relative;
+    display: inline-block;
+    width: 80%;
+    max-width: 500px;
+    overflow: hidden;
+    margin: 20px auto;
+}
+
+.carousel-images {
+    display: flex;
+    transition: transform 0.3s ease-in-out;
+}
+
+.carousel-images img {
+    width: 100%;
+    flex-shrink: 0;
+    border-radius: 8px;
+    display: none;
+}
+
+.carousel-images img.active {
+    display: block;
+}
+
+.prev-btn, .next-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0);
+    color: #000000;
+    border: none;
+    padding: 10px;
+    cursor: pointer;
+    border-radius: 50%;
+}
+
+.prev-btn {
+    right: 300px;
+}
+
+.next-btn {
+    left: 300px;
+}
+
+  
+.products-section {
+    padding: 30px 10px;
+    text-align: center;
+}
+
+.product-card {
+    display: inline-block;
+    margin: 10px;
+    padding: 15px; /* Pak më e vogël */
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    text-align: left; /* Teksti brenda kartës */
+    max-width: 300px; /* Zvogëluam kufizimin e gjerësisë së kartës */
+    background-color: #f9f9f905;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease; /* Animacion për zmadhimin */
+}
+
+.product-card:hover {
+    transform: scale(1.05); /* Zmadhimi kur e prek */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Hije më e theksuar kur e prek */
+}
+
+.product-card img {
+    max-width: 100%;
+    height: auto;
+    margin-bottom: 10px; /* Pak më e vogël */
+    border-radius: 5px;
+}
+
+.product-card p {
+    font-size: 12px; /* Tekst më i vogël për hapësirë */
+    line-height: 1.4;
+    text-align: justify; /* Teksti i barazuar */
+    max-height: 80px; /* Kufizojmë lartësinë */
+    overflow: hidden; /* Fshehim tekstin që tejkalon */
+    position: relative;
+}
+
+.product-card p:hover {
+    transform: scale(1.05); /* Efekt zmadhimi edhe për tekstin */
+}
+
+button {
+    padding: 10px 15px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-family: 'Monoton', cursive;
+    margin-top: 10px;
+    display: block;
+    width: 100%; /* Butoni të mbulojë gjerësinë e kartës */
+    text-align: center;
+}
+
+.products-section h2 {
+    text-align: center;
+    margin-bottom: 20px;
+    font-family: 'Pacifico', cursive;
+    font-size: 24px;
+}
+
+
+footer {
+    text-align: center;
+    padding: 10px 0;
+    background-color: rgba(51, 51, 51, 0.281);
+    color: white;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0, 0, 0, 0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 50%;
+    border-radius: 10px;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}

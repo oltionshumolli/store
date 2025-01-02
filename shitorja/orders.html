@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Orders</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: url('background.jpg') no-repeat center center fixed;
+            background-size: cover;
+         
+            margin: 0;
+            padding: 0;
+        }
+        .login-container, .orders-container {
+            max-width: 90%;
+            margin: 50px auto;
+            background: #fff;
+            padding: 20px;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            border-radius: 10px;
+        }
+        h2 {
+            text-align: center;
+        }
+        .form-group {
+            margin-bottom: 15px;
+        }
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+        }
+        .form-group input, .form-group button {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+        .form-group button {
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            cursor: pointer;
+        }
+        .form-group button:hover {
+            background-color: #0056b3;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+            font-size: 1rem;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 15px;
+            text-align: left;
+        }
+        th {
+            background-color: #007bff;
+            color: rgb(31, 18, 18);
+            font-size: 1.1rem;
+        }
+        .no-orders {
+            text-align: center;
+            color: #555;
+        }
+    </style>
+</head>
+<body>
+    <!-- LOGIN FORM -->
+    <div class="login-container" id="login-section">
+        <h2>Login</h2>
+        <div class="form-group">
+            <label for="username">Username:</label>
+            <input type="text" id="username" placeholder="Enter username">
+        </div>
+        <div class="form-group">
+            <label for="password">Password:</label>
+            <input type="password" id="password" placeholder="Enter password">
+        </div>
+        <div class="form-group">
+            <button id="login-button">Login</button>
+        </div>
+        <p id="error-message" style="color: red; display: none;">Invalid username or password!</p>
+    </div>
+
+    <!-- ORDERS SECTION -->
+    <div class="orders-container" id="orders-section" style="display: none;">
+        <h2>Orders</h2>
+        <button id="add-order-button" style="margin-bottom: 10px;">Add Order</button>
+        <table>
+            <thead>
+                <tr>
+                    <th>Product</th>
+                    <th>Address</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Total Price</th>
+                    <th>Date</th>
+                    <th>Status</th>
+                    <th>Action</th>
+                </tr>
+            </thead>
+            <tbody id="orders-table"></tbody>
+        </table>
+    </div>
+
+    <script>
+        // Inicializimi i përdoruesve shembull
+        if (!localStorage.getItem("users")) {
+            const users = [
+                { username: "oltionshumolli", password: "24022010" },
+                { username: "user", password: "password" }
+            ];
+            localStorage.setItem("users", JSON.stringify(users));
+        }
+        
+        // Elementet e DOM
+        const loginSection = document.getElementById("login-section");
+        const ordersSection = document.getElementById("orders-section");
+        const loginButton = document.getElementById("login-button");
+        const errorMessage = document.getElementById("error-message");
+        const ordersTable = document.getElementById("orders-table");
+        const recycleBinTable = document.getElementById("recycle-bin-table");
+        const addOrderButton = document.getElementById("add-order-button");
+        
+        // Funksioni i logimit
+        loginButton.addEventListener("click", () => {
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+            const users = JSON.parse(localStorage.getItem("users")) || [];
+        
+            const user = users.find(u => u.username === username && u.password === password);
+        
+            if (user) {
+                loginSection.style.display = "none";
+                ordersSection.style.display = "block";
+            } else {
+                errorMessage.style.display = "block";
+            }
+        });
+        
+        // Shfaqja e porosive
+        function displayOrders(orders = null) {
+            const ordersData = orders || JSON.parse(localStorage.getItem("orders")) || [];
+            ordersTable.innerHTML = "";
+        
+            if (ordersData.length === 0) {
+                const row = ordersTable.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 8;
+                cell.textContent = "No orders available!";
+                cell.style.textAlign = "center";
+            } else {
+                ordersData.forEach((order, index) => {
+                    const row = ordersTable.insertRow();
+                    row.insertCell(0).textContent = order.products.map(p => p.name).join(", ");
+                    row.insertCell(1).textContent = order.address;
+                    row.insertCell(2).textContent = `${order.name} ${order.surname}`;
+                    row.insertCell(3).textContent = order.phone;
+                    row.insertCell(4).textContent = `$${order.total.toFixed(2)}`;
+                    row.insertCell(5).textContent = order.date;
+                    row.insertCell(6).textContent = order.status;
+        
+                    const actionCell = row.insertCell(7);
+                    const changeStatusButton = document.createElement("button");
+                    changeStatusButton.textContent = "Change Status";
+                    changeStatusButton.addEventListener("click", () => toggleStatus(index));
+                    actionCell.appendChild(changeStatusButton);
+                });
+            }
+        }
+        
+        // Ndryshimi i statusit të porosisë
+        function toggleStatus(index) {
+            const orders = JSON.parse(localStorage.getItem("orders")) || [];
+            orders[index].status = orders[index].status === "Completed" ? "Pending" : "Completed";
+            localStorage.setItem("orders", JSON.stringify(orders));
+            displayOrders();
+        }
+        
+        // Shtimi i një porosie të re
+        addOrderButton.addEventListener("click", () => {
+            const newOrder = 
+                row.insertCell(0).textContent = order.products.map(p => p.name).join(", ");
+                    row.insertCell(1).textContent = order.address;
+                    row.insertCell(2).textContent = `${order.name} ${order.surname}`;
+                    row.insertCell(3).textContent = order.phone;
+                    row.insertCell(4).textContent = `$${order.total.toFixed(2)}`;
+                    row.insertCell(5).textContent = order.date;
+                    row.insertCell(6).textContent = order.status;
+        
+            
+        
+            const orders = JSON.parse(localStorage.getItem("orders")) || [];
+            orders.push(newOrder);
+            localStorage.setItem("orders", JSON.stringify(orders));
+            displayOrders();
+        });
+        
+        // Funksioni për të fshirë të gjitha porositë dhe t'i ruajë në recycle bin
+        function deleteAllOrders() {
+            const orders = JSON.parse(localStorage.getItem("orders")) || [];
+            localStorage.setItem("recycleBin", JSON.stringify(orders));
+            localStorage.removeItem("orders");
+            alert("Të gjitha porositë u fshinë dhe u ruajtën në recycle bin.");
+            displayOrders();
+        }
+        
+        // Shfaqja e recycle bin
+        function displayRecycleBin() {
+            const recycleBin = JSON.parse(localStorage.getItem("recycleBin")) || [];
+            recycleBinTable.innerHTML = "";
+        
+            if (recycleBin.length === 0) {
+                const row = recycleBinTable.insertRow();
+                const cell = row.insertCell(0);
+                cell.colSpan = 8;
+                cell.textContent = "Recycle bin is empty!";
+                cell.style.textAlign = "center";
+            } else {
+                recycleBin.forEach((order, index) => {
+                    const row = recycleBinTable.insertRow();
+                    row.insertCell(0).textContent = order.products.map(p => p.name).join(", ");
+                    row.insertCell(1).textContent = order.address;
+                    row.insertCell(2).textContent = `${order.name} ${order.surname}`;
+                    row.insertCell(3).textContent = order.phone;
+                    row.insertCell(4).textContent = `$${order.total.toFixed(2)}`;
+                    row.insertCell(5).textContent = order.date;
+                    row.insertCell(6).textContent = order.status;
+                });
+            }
+        }
+        
+        // Funksioni për të kërkuar porosi sipas datës
+        function searchOrdersByDate(date) {
+            const orders = JSON.parse(localStorage.getItem("orders")) || [];
+            const filteredOrders = orders.filter(order => order.date === date);
+            if (filteredOrders.length > 0) {
+                displayOrders(filteredOrders);
+            } else {
+                alert(`Nuk u gjetën porosi për datën ${date}`);
+            }
+        }
+        
+        // Shto butonat për funksionet e reja
+        const ordersContainer = document.querySelector(".orders-container");
+        
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Delete All Orders";
+        deleteButton.style.marginRight = "10px";
+        deleteButton.addEventListener("click", deleteAllOrders);
+        ordersContainer.insertBefore(deleteButton, ordersContainer.firstChild);
+        
+        const recycleBinButton = document.createElement("button");
+        recycleBinButton.textContent = "View Recycle Bin";
+        recycleBinButton.addEventListener("click", displayRecycleBin);
+        ordersContainer.insertBefore(recycleBinButton, ordersContainer.firstChild);
+        
+        const searchForm = document.createElement("div");
+        searchForm.innerHTML = `
+            <input type="date" id="search-date" style="margin-right: 10px;">
+            <button id="search-button">Search by Date</button>
+        `;
+        ordersContainer.insertBefore(searchForm, ordersContainer.firstChild);
+        
+        document.getElementById("search-button").addEventListener("click", () => {
+            const date = document.getElementById("search-date").value;
+            if (date) {
+                searchOrdersByDate(new Date(date).toLocaleDateString());
+            } else {
+                alert("Ju lutem shtypni një datë!");
+            }
+        });
+        
+        // Shfaq porositë ekzistuese në ngarkimin e faqes
+        displayOrders();
+        </script>
+        
+</body>
+</html>
